@@ -49,7 +49,6 @@ jobs:
             ninja-build
             zlib1g-dev
             libcapstone-dev
-            libslirp
             libslirp-dev
             pkgconf
             python3
