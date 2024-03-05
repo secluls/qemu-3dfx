@@ -137,4 +137,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: 3dfx-QEMU
-          path: D:\a\qemu-3dfx\qemu-3dfx\qemu\build\
+          path: D:\a\qemu-3dfx\qemu-3dfx\qemu-8.2.1\build\
