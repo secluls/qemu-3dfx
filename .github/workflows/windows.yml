@@ -62,7 +62,7 @@ jobs:
           patch -p0 -i ../00-qemu82x-mesa-glide.patch
           bash ../scripts/sign_commit
           mkdir ../build && cd ../build
-          ../qemu-8.2.1/configure --cross-prefix=x86_64-w64-mingw64- --target-list=i386-softmmu --enable-whqx --enable-sdl --disable-capstone --enable-slirp      
+          ../qemu-8.2.1/configure --cross-prefix=x86_64-w64-mingw64- --target-list=i386-softmmu --enable-sdl --disable-capstone --enable-slirp      
           make
 
 
