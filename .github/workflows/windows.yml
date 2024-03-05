@@ -129,7 +129,7 @@ jobs:
           mkdir build
           cd build
           D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "ccache --zero-stats"
-          D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "../qemu-8.2.1/configure --target-list=i386-softmmu --enable-whpx --enable-sdl --disable-capstone --enable-slirp"
+          D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "../configure --target-list=i386-softmmu --enable-whpx --enable-sdl --disable-capstone --enable-slirp"
           D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "make"
           D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "ccache --show-stats"
           Write-Output "Finished build at $(Get-Date -Format u)"
