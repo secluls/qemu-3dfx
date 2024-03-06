@@ -140,4 +140,4 @@ jobs:
         uses: actions/upload-artifact@v4.3.1
         with:
           name: 3dfx-QEMU
-          path: D:\a\qemu-3dfx\qemu-3dfx\qemu-8.2.1\qemu.tar.gz\
+          path: D:\a\qemu-3dfx\qemu-3dfx\qemu-8.2.1\qemu.tar.gz
