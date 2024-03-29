@@ -191,7 +191,7 @@ diff -Nru ../orig/qemu-7.2.9/meson.build ./meson.build
 diff -Nru ../orig/qemu-7.2.9/softmmu/vl.c ./softmmu/vl.c
 --- ../orig/qemu-7.2.9/softmmu/vl.c
 +++ ./softmmu/vl.c
-@@ -828,6 +828,13 @@
+@@ -828,6 +828,8 @@
      return default_machineclass;
  }
 
@@ -200,7 +200,7 @@ diff -Nru ../orig/qemu-7.2.9/softmmu/vl.c ./softmmu/vl.c
  static void version(void)
  {
      printf("QEMU emulator version " QEMU_FULL_VERSION "\n"
-@@ -2900,6 +2907,7 @@
+@@ -2900,6 +2907,6 @@
                  break;
              case QEMU_OPTION_version:
                  version();
