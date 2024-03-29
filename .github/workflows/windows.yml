@@ -134,8 +134,10 @@ jobs:
           D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "ccache --show-stats"
           Write-Output "Finished build at $(Get-Date -Format u)"
           
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4.3.1
+      - name: Upload Releases 
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: 3dfx-QEMU
-          path: D:\a\qemu-3dfx\qemu-3dfx\qemu-8.2.1\qemu.tar.gz
+          file: D:\a\qemu-3dfx\qemu-3dfx\qemu-8.2.1\qemu.tar.gz
+          draft: false
