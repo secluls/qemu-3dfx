@@ -191,7 +191,7 @@ diff -Nru ../orig/qemu-8.2.1/meson.build ./meson.build
 diff -Nru ../orig/qemu-8.2.1/system/vl.c ./system/vl.c
 --- ../orig/qemu-8.2.1/system/vl.c
 +++ ./system/vl.c
-@@ -864,6 +864,9 @@
+@@ -864,6 +864,8 @@
      return default_machineclass;
  }
 
