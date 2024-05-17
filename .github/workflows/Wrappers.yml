@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install dependencies
-        uses: Amitie10g/install-package@main
+        uses: ConorMacBride/install-package@v1
         with:
           apt: >
             binutils-mips-linux-gnu
