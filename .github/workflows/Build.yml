@@ -36,7 +36,7 @@ jobs:
             - name: Build qemu82x
               run: |
                wget --no-check-certificate https://download.qemu.org/qemu-8.2.5.tar.xz
-               tar xfv qemu-8.2.5.tar.xz
+               /mingw64/bin/tar tar xfv qemu-8.2.5.tar.xz
                mkdir bin
                cd qemu-8.2.5
                rsync -r ../qemu-0/hw/3dfx ./hw/
@@ -45,9 +45,9 @@ jobs:
                mkdir ../build && cd ../build
                ../qemu-8.2.5/configure ../configure --disable-werror --target-list=i386-softmmu --enable-whpx --enable-sdl --enable-slirp      
                make -j4
+               ls
                cd ..
-               D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar -czvf qemu82xwin.tar.gz ./build"
-               cd ..
+               tar -czvf qemu82xwin.tar.gz ./build
                ls
                cp ./qemu-8.2.5/qemu82xwin.tar.gz bin/
 
@@ -147,7 +147,6 @@ jobs:
           make -j4
           cd ..
           tar -czvf qemu82xubuntu.tar.gz ./build
-          cd ..
           ls
           cp ./qemu-8.2.5/qemu82xubuntu.tar.gz bin/
           
@@ -237,6 +236,21 @@ jobs:
                   bash ./bootstrap
                   mkdir build && cd build
                   ../configure && make
+
+
+              - name: Package
+                run: |
+                 mkdir wrapbin/3dfx
+                 mkdir wrapbin/mesa
+                 mkdir wrapbin/openglide
+                 ls
+                 cp -r wrappers/3dfx/build/ ./wrapbin/3dfx
+                 cp -r wrappers/mesa/build/ ./wrapbin/mesa
+                 cp -r qemu-xtra/openglide/build/ ./wrapbin/openglide
+                 tar -czvf wrapbin.tar.gz wrapbin
+
+
+                  
         
                   
               - name: Upload Releases 
@@ -244,6 +258,5 @@ jobs:
                 env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
-                  default_release_name: Wrappers
-                  file: ${{github.workspace}}
+                  file: ${{github.workspace}}/wrapbin.tar.gz
                   draft: false
