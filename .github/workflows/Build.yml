@@ -12,7 +12,7 @@ jobs:
 
 
 
-  build-qemu82x-windows:
+  windows:
           runs-on: windows-latest
           defaults:
             run:
@@ -36,7 +36,7 @@ jobs:
             - name: Build qemu82x
               run: |
                wget --no-check-certificate https://download.qemu.org/qemu-8.2.5.tar.xz
-               D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar xfv qemu-8.2.5.tar.xz"
+               tar xfv qemu-8.2.5.tar.xz
                mkdir bin
                cd qemu-8.2.5
                rsync -r ../qemu-0/hw/3dfx ./hw/
@@ -48,13 +48,14 @@ jobs:
                cd ..
                D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar -czvf qemu82xwin.tar.gz ./build"
                cd ..
+               ls
                cp ./qemu-8.2.5/qemu82xwin.tar.gz bin/
 
 
             - name: Build qemu72x
               run: |
                 wget --no-check-certificate https://download.qemu.org/qemu-7.2.12.tar.xz
-                D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar xfv qemu-7.2.12.tar.xz"
+                tar xfv qemu-7.2.12.tar.xz
                 mkdir bin
                 cd qemu-7.2.12
                 rsync -r ../qemu-0/hw/3dfx ./hw/
@@ -64,8 +65,9 @@ jobs:
                 ../qemu-7.2.12/configure --disable-werror --target-list=i386-softmmu --enable-whpx --enable-sdl --enable-slirp      
                 make -j4
                 cd ..
-                D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar -czvf qemu72xwin.tar.gz ./build"
+                tar -czvf qemu72xwin.tar.gz ./build
                 cd ..
+                ls
                 cp ./qemu-7.2.12/qemu72xwin.tar.gz bin/
                 
 
@@ -146,6 +148,7 @@ jobs:
           cd ..
           tar -czvf qemu82xubuntu.tar.gz ./build
           cd ..
+          ls
           cp ./qemu-8.2.5/qemu82xubuntu.tar.gz bin/
           
       - name: Build qemu72x
@@ -160,8 +163,9 @@ jobs:
           ../qemu-7.2.12/configure --disable-werror --target-list=i386-softmmu --enable-kvm --enable-sdl --enable-slirp      
           make -j4
           cd ..
-          tar -czvf qemu72xubuntu.tar.gz ./build
+          tar -czvf qemu72xubuntu.tar.gz ./build/72x
           cd ..
+          ls
           cp ./qemu-7.2.12/qemu72xubuntu.tar.gz bin/
 
       - name: Upload Releases 
@@ -172,3 +176,74 @@ jobs:
           default_release_name: Qemu-3dfx-Ubuntu
           file: ${{github.workspace}}/bin/
           draft: false
+
+
+
+
+
+  wrappers:
+            runs-on: ubuntu-latest
+            steps:
+              - name: Checkout
+                uses: actions/checkout@v4
+              - name: Install dependencies
+                uses: ConorMacBride/install-package@v1
+                with:
+                  apt: >
+                    binutils-mips-linux-gnu
+                    ninja-build
+                    bsdmainutils
+                    build-essential
+                    libaudiofile-dev
+                    binutils-djgpp
+                    binutils-mingw-w64
+                    libdigest-sha-perl
+                    mingw-w64-tools
+                    libsdl2-dev
+                    libusb-1.0-0-dev
+                    gcc-mingw-w64
+                    g++-mingw-w64-i686
+                    g++-mingw-w64
+                    g++-10-multilib
+                    gcc-10-multilib
+                    gcc-mingw-w64-x86-64-win32-runtime
+                    gcc-mingw-w64-i686
+                    mingw-w64-x86-64-dev
+                    mingw-w64-i686-dev
+                    mingw-w64-common
+                    libx11-dev
+                    libcapstone-dev
+                    pkgconf
+                    python3
+              - name: Build Wrappers/3dfx
+                run: |
+                  cd wrappers/3dfx
+                  mkdir build && cd build
+                  bash ../../../scripts/conf_wrapper
+                  make
+            
+              - name: Build Wrappers/Mesa
+                run: |
+                  cd wrappers/mesa
+                  mkdir build && cd build
+                  bash ../../../scripts/conf_wrapper
+                  make
+        
+              - name: Build Wrappers/Openglide
+                run: |
+                  git clone https://github.com/kjliew/qemu-xtra.git
+                  cd qemu-xtra
+                  cd openglide
+                  bash ./bootstrap
+                  mkdir build && cd build
+                  ../configure && make
+        
+                  
+              - name: Upload Releases 
+                uses: xresloader/upload-to-github-release@v1
+                env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                  default_release_name: Wrappers
+                  file: ${{github.workspace}}
+                  draft: false
