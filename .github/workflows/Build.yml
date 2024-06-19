@@ -1,0 +1,174 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+
+
+
+
+
+
+
+  build-qemu82x-windows:
+          runs-on: windows-latest
+          defaults:
+            run:
+              shell: msys2 {0}
+          steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Install MSYS2
+              uses: msys2/setup-msys2@v2
+              with:
+                msystem: MINGW64
+                update: true
+                install: >-
+                  git
+                  patch
+                  rsync
+                  make
+                  mingw-w64-x86_64-qemu
+                  mingw-w64-x86_64-toolchain
+                  mingw-w64-x86_64-libslirp
+            - name: Build qemu82x
+              run: |
+               wget --no-check-certificate https://download.qemu.org/qemu-8.2.5.tar.xz
+               D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar xfv qemu-8.2.5.tar.xz"
+               mkdir bin
+               cd qemu-8.2.5
+               rsync -r ../qemu-0/hw/3dfx ./hw/
+               rsync -r ../qemu-1/hw/mesa ./hw/
+               patch -p0 -i ../00-qemu82x-mesa-glide.patch
+               mkdir ../build && cd ../build
+               ../qemu-8.2.5/configure ../configure --disable-werror --target-list=i386-softmmu --enable-whpx --enable-sdl --enable-slirp      
+               make -j4
+               cd ..
+               D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar -czvf qemu82xwin.tar.gz ./build"
+               cd ..
+               cp ./qemu-8.2.5/qemu82xwin.tar.gz bin/
+
+
+            - name: Build qemu72x
+              run: |
+                wget --no-check-certificate https://download.qemu.org/qemu-7.2.12.tar.xz
+                D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar xfv qemu-7.2.12.tar.xz"
+                mkdir bin
+                cd qemu-7.2.12
+                rsync -r ../qemu-0/hw/3dfx ./hw/
+                rsync -r ../qemu-1/hw/mesa ./hw/
+                patch -p0 -i ../00-qemu82x-mesa-glide.patch
+                mkdir ../build && cd ../build
+                ../qemu-7.2.12/configure --disable-werror --target-list=i386-softmmu --enable-whpx --enable-sdl --enable-slirp      
+                make -j4
+                cd ..
+                D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "tar -czvf qemu72xwin.tar.gz ./build"
+                cd ..
+                cp ./qemu-7.2.12/qemu72xwin.tar.gz bin/
+                
+
+            - name: Package dlls
+              run: |
+               cp /mingw64/bin/*.dll bin/
+
+            - name: Upload Releases 
+              uses: xresloader/upload-to-github-release@v1
+              env:
+                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                 default_release_name: Qemu-3dfx-Windows
+                 file: ${{github.workspace}}/bin/
+                 draft: false
+                
+
+
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: ConorMacBride/install-package@v1
+        with:
+          apt: >
+            meson
+            binutils-mips-linux-gnu
+            ninja-build
+            bsdmainutils
+            build-essential
+            libaudiofile-dev
+            binutils-djgpp
+            binutils-mingw-w64
+            libdigest-sha-perl
+            mingw-w64-tools
+            libsdl2-dev
+            libusb-1.0-0-dev
+            gcc-mingw-w64
+            g++-mingw-w64-i686
+            g++-mingw-w64
+            g++-10-multilib
+            gcc-10-multilib
+            gcc-mingw-w64-x86-64-win32-runtime
+            gcc-mingw-w64-i686
+            mingw-w64-x86-64-dev
+            mingw-w64-i686-dev
+            mingw-w64-common
+            libx11-dev
+            bison
+            diffutils
+            flex
+            make
+            sed
+            libglib2.0-dev
+            libfdt-dev
+            libpixman-1-dev
+            ninja-build
+            zlib1g-dev
+            libcapstone-dev
+            libslirp-dev
+            pkgconf
+            python3
+
+      - name: Build qemu82x
+        run: |
+          wget --no-check-certificate https://download.qemu.org/qemu-8.2.5.tar.xz
+          tar xfv qemu-8.2.5.tar.xz
+          mkdir bin
+          cd qemu-8.2.5
+          rsync -r ../qemu-0/hw/3dfx ./hw/
+          rsync -r ../qemu-1/hw/mesa ./hw/
+          patch -p0 -i ../00-qemu82x-mesa-glide.patch
+          mkdir ../build && cd ../build
+          ../qemu-8.2.5/configure --disable-werror --target-list=i386-softmmu --enable-kvm --enable-sdl --enable-slirp      
+          make -j4
+          cd ..
+          tar -czvf qemu82xubuntu.tar.gz ./build
+          cd ..
+          cp ./qemu-8.2.5/qemu82xubuntu.tar.gz bin/
+          
+      - name: Build qemu72x
+        run: |
+          wget --no-check-certificate https://download.qemu.org/qemu-7.2.12.tar.xz
+          tar xfv qemu-7.2.12.tar.xz
+          cd qemu-7.2.12
+          rsync -r ../qemu-0/hw/3dfx ./hw/
+          rsync -r ../qemu-1/hw/mesa ./hw/
+          patch -p0 -i ../01-qemu72x-mesa-glide.patch
+          mkdir ../build/72x && cd ../build/72x
+          ../qemu-7.2.12/configure --disable-werror --target-list=i386-softmmu --enable-kvm --enable-sdl --enable-slirp      
+          make -j4
+          cd ..
+          tar -czvf qemu72xubuntu.tar.gz ./build
+          cd ..
+          cp ./qemu-7.2.12/qemu72xubuntu.tar.gz bin/
+
+      - name: Upload Releases 
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          default_release_name: Qemu-3dfx-Ubuntu
+          file: ${{github.workspace}}/bin/
+          draft: false
