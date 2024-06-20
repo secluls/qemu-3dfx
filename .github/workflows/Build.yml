@@ -37,7 +37,9 @@ jobs:
             - name: Build qemu82x
               run: |
                wget --no-check-certificate https://download.qemu.org/qemu-8.2.5.tar.xz
-               tar xfv qemu-8.2.5.tar.xz
+               wget --no-check-certificate https://mirror.msys2.org/msys/x86_64/tar-1.35-2-x86_64.pkg.tar.zst #use msys2 tar, didnt bother with changing windows path
+               tar --zstd -xvf tar-1.35-2-x86_64.pkg.tar.zst
+               D:\a\qemu-3dfx\qemu-3dfx\usr\bin\tar.exe xfv qemu-8.2.5.tar.xz               
                mkdir bin
                cd qemu-8.2.5
                rsync -r ../qemu-0/hw/3dfx ./hw/
@@ -65,6 +67,7 @@ jobs:
                 mkdir ../build && cd ../build
                 ../qemu-7.2.12/configure --disable-werror --target-list=i386-softmmu --enable-whpx --enable-sdl --enable-slirp      
                 make -j4
+                ls
                 cd ..
                 tar -czvf qemu72xwin.tar.gz ./build
                 cd ..
@@ -239,6 +242,7 @@ jobs:
 
               - name: Package
                 run: |
+                 mkdir wrapbin
                  mkdir wrapbin/3dfx/
                  mkdir wrapbin/mesa/
                  mkdir wrapbin/openglide/
