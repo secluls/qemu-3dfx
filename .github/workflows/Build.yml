@@ -37,7 +37,7 @@ jobs:
             - name: Build qemu82x
               run: |
                wget --no-check-certificate https://download.qemu.org/qemu-8.2.5.tar.xz
-               /mingw64/bin/tar tar xfv qemu-8.2.5.tar.xz
+               tar xfv qemu-8.2.5.tar.xz
                mkdir bin
                cd qemu-8.2.5
                rsync -r ../qemu-0/hw/3dfx ./hw/
