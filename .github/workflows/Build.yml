@@ -28,9 +28,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Clone QEMU
-        run: git clone https://github.com/qemu/qemu.git
-
 
       - name: Set up MSYS2
         run: |
@@ -181,19 +178,19 @@ jobs:
           Write-Output "Finished build at $(Get-Date -Format u)"
                 
 
-            - name: Package dlls
-              run: |
-               ls
-               cp /msys64/bin/*.dll bin/
+      - name: Package dlls
+        run: |
+              ls
+              cp /msys64/bin/*.dll bin/
 
-            - name: Upload Releases 
-              uses: xresloader/upload-to-github-release@v1
-              env:
-                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                 default_release_name: Qemu-3dfx-Windows
-                 file: ${{github.workspace}}/bin/
-                 draft: false
+      - name: Upload Releases 
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+            default_release_name: Qemu-3dfx
+            file: ${{github.workspace}}/bin/
+            draft: false
                 
 
 
@@ -282,6 +279,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          default_release_name: Qemu-3dfx
           file: ${{github.workspace}}/bin/
           draft: true
 
@@ -368,5 +366,6 @@ jobs:
                 env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
+                  default_release_name: Qemu-3dfx
                   file: ${{github.workspace}}/wrapbin.tar.gz
                   draft: true
