@@ -27,6 +27,7 @@ jobs:
                 update: true
                 install: >-
                   git
+                  tar
                   patch
                   rsync
                   make
@@ -148,7 +149,7 @@ jobs:
           cd ..
           tar -czvf qemu82xubuntu.tar.gz ./build
           ls
-          cp ./qemu-8.2.5/qemu82xubuntu.tar.gz bin/
+          cp qemu82xubuntu.tar.gz bin/
           
       - name: Build qemu72x
         run: |
@@ -163,16 +164,14 @@ jobs:
           make -j4
           cd ..
           tar -czvf qemu72xubuntu.tar.gz ./build/72x
-          cd ..
           ls
-          cp ./qemu-7.2.12/qemu72xubuntu.tar.gz bin/
+          cp qemu72xubuntu.tar.gz bin/
 
       - name: Upload Releases 
         uses: xresloader/upload-to-github-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          default_release_name: Qemu-3dfx-Ubuntu
           file: ${{github.workspace}}/bin/
           draft: false
 
@@ -240,13 +239,13 @@ jobs:
 
               - name: Package
                 run: |
-                 mkdir wrapbin/3dfx
-                 mkdir wrapbin/mesa
-                 mkdir wrapbin/openglide
+                 mkdir wrapbin/3dfx/
+                 mkdir wrapbin/mesa/
+                 mkdir wrapbin/openglide/
                  ls
-                 cp -r wrappers/3dfx/build/ ./wrapbin/3dfx
-                 cp -r wrappers/mesa/build/ ./wrapbin/mesa
-                 cp -r qemu-xtra/openglide/build/ ./wrapbin/openglide
+                 cp -r wrappers/3dfx/build/ ./wrapbin/3dfx/
+                 cp -r wrappers/mesa/build/ ./wrapbin/mesa/
+                 cp -r qemu-xtra/openglide/build/ ./wrapbin/openglide/
                  tar -czvf wrapbin.tar.gz wrapbin
 
 
