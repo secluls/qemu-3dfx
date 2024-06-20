@@ -40,8 +40,9 @@ jobs:
                wget --no-check-certificate https://mirror.msys2.org/msys/x86_64/tar-1.35-2-x86_64.pkg.tar.zst #use msys2 tar, didnt bother with changing windows path
                tar --zstd -xvf tar-1.35-2-x86_64.pkg.tar.zst
                ls
-               D:\a\qemu-3dfx\qemu-3dfx\usr\bin\tar.exe xfv qemu-8.2.5.tar.xz               
+               cp usr/bin/tar.exe .                
                mkdir bin
+               tar.exe xfv qemu-8.2.5.tar.xz
                cd qemu-8.2.5
                rsync -r ../qemu-0/hw/3dfx ./hw/
                rsync -r ../qemu-1/hw/mesa ./hw/
@@ -263,4 +264,4 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                   file: ${{github.workspace}}/wrapbin.tar.gz
-                  draft: false
+                  draft: true
