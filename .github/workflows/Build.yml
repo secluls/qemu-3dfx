@@ -181,7 +181,7 @@ jobs:
       - name: Package dlls
         run: |
               ls
-              cp /msys64/bin/*.dll bin/
+              cp /mingw64/bin/*.dll bin/
 
       - name: Upload Releases 
         uses: xresloader/upload-to-github-release@v1
