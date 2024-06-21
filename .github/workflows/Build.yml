@@ -176,6 +176,23 @@ jobs:
           cp ./qemu-7.2.12/qemu72Xwin.tar.gz ./bin
           D:\a\qemu-3dfx\qemu-3dfx\msys64\usr\bin\bash -lc "ccache --show-stats"
           Write-Output "Finished build at $(Get-Date -Format u)"
+
+
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            git
+            make
+            mingw-w64-x86_64-qemu
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-SDL2
+            mingw-w64-x86_64-zlib
+
+
+          
                 
 
       - name: Package dlls
