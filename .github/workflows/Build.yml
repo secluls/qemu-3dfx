@@ -178,27 +178,6 @@ jobs:
           Write-Output "Finished build at $(Get-Date -Format u)"
 
 
-      - name: Install MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          install: >-
-            git
-            make
-            mingw-w64-x86_64-qemu
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-SDL2
-            mingw-w64-x86_64-zlib
-
-
-          
-                
-
-      - name: Package dlls
-        run: |
-              ls
-              cp /mingw64/bin/*.dll bin/
 
       - name: Upload Releases 
         uses: xresloader/upload-to-github-release@v1
